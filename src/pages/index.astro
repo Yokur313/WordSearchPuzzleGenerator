@@ -1,16 +1,965 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Word Search Generator">
+	<main class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+		<div class="max-w-7xl mx-auto p-4">
+			<header class="text-center mb-8">
+				<h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+					Word Search Generator
+				</h1>
+				<p class="text-gray-600 text-lg">Create beautiful, customizable word search puzzles</p>
+			</header>
+			
+			<div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+				<!-- Controls Panel -->
+				<div class="xl:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
+					<div class="sticky top-6">
+						<h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+							<svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+							</svg>
+							Settings
+						</h2>
+					
+					<!-- Words Input -->
+					<div class="mb-6">
+						<label for="words" class="block text-sm font-medium text-gray-700 mb-2">
+							Words (one per line)
+						</label>
+						<textarea
+							id="words"
+							placeholder="Enter words here, one per line...&#10;&#10;Try these sample words:&#10;PUZZLE&#10;SEARCH&#10;WORD&#10;GAME&#10;FUN"
+							class="w-full h-32 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-gray-50/50"
+						></textarea>
+						<div class="mt-3 flex gap-3">
+							<button
+								id="loadSampleBtn"
+								type="button"
+								class="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
+							>
+								📝 Load Sample
+							</button>
+							<button
+								id="clearWordsBtn"
+								type="button"
+								class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
+							>
+								🗑️ Clear
+							</button>
+						</div>
+					</div>
+
+					<!-- Options -->
+					<div class="mb-6">
+						<h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Options</h3>
+						<div class="space-y-3">
+							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+								<input
+									type="checkbox"
+									id="allowBackwards"
+									class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors duration-200"
+								>
+								<span class="ml-3 text-sm text-gray-700 font-medium">Allow backwards words</span>
+							</label>
+							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+								<input
+									type="checkbox"
+									id="showBorders"
+									class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors duration-200"
+								>
+								<span class="ml-3 text-sm text-gray-700 font-medium">Show letter borders</span>
+							</label>
+							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+								<input
+									type="checkbox"
+									id="showShadows"
+									class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors duration-200"
+								>
+								<span class="ml-3 text-sm text-gray-700 font-medium">Show letter shadows</span>
+							</label>
+						</div>
+					</div>
+
+					<!-- Formatting Options -->
+					<div class="space-y-5 mb-6">
+						<h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Formatting</h3>
+						
+						<!-- Font Selector -->
+						<div class="space-y-2">
+							<label for="fontFamily" class="block text-sm font-medium text-gray-700">
+								Font Family
+							</label>
+							<select
+								id="fontFamily"
+								class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50 transition-all duration-200"
+							>
+								<option value="Times New Roman">Times New Roman</option>
+								<option value="Arial">Arial</option>
+								<option value="Helvetica">Helvetica</option>
+								<option value="Georgia">Georgia</option>
+								<option value="Courier New">Courier New</option>
+								<option value="Verdana">Verdana</option>
+							</select>
+						</div>
+
+						<!-- Font Weight -->
+						<div class="space-y-2">
+							<label for="fontWeight" class="block text-sm font-medium text-gray-700">
+								Font Weight
+							</label>
+							<select
+								id="fontWeight"
+								class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50 transition-all duration-200"
+							>
+								<option value="normal" selected>Normal</option>
+								<option value="bold">Bold</option>
+								<option value="100">Thin (100)</option>
+								<option value="200">Extra Light (200)</option>
+								<option value="300">Light (300)</option>
+								<option value="400">Normal (400)</option>
+								<option value="500">Medium (500)</option>
+								<option value="600">Semi Bold (600)</option>
+								<option value="700">Bold (700)</option>
+								<option value="800">Extra Bold (800)</option>
+								<option value="900">Black (900)</option>
+							</select>
+						</div>
+
+						<!-- Letter Size -->
+						<div class="space-y-2">
+							<div class="flex justify-between items-center">
+								<label for="letterSize" class="text-sm font-medium text-gray-700">
+									Letter Size
+								</label>
+								<span id="letterSizeValue" class="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">16px</span>
+							</div>
+							<input
+								type="range"
+								id="letterSize"
+								min="12"
+								max="32"
+								value="16"
+								class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
+							>
+						</div>
+
+						<!-- Letter Spacing -->
+						<div class="space-y-2">
+							<div class="flex justify-between items-center">
+								<label for="letterSpacing" class="text-sm font-medium text-gray-700">
+									Letter Spacing
+								</label>
+								<span id="letterSpacingValue" class="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">0px</span>
+							</div>
+							<input
+								type="range"
+								id="letterSpacing"
+								min="0"
+								max="10"
+								value="0"
+								class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
+							>
+						</div>
+
+						<!-- Colors -->
+						<div class="space-y-4">
+							<h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Colors</h4>
+							
+							<!-- Letter Color -->
+							<div class="space-y-2">
+								<label for="letterColor" class="block text-sm font-medium text-gray-700">
+									Letter Color
+								</label>
+								<div class="flex gap-2 items-center">
+									<input
+										type="color"
+										id="letterColor"
+										value="#374151"
+										class="w-12 h-10 border border-gray-200 rounded-lg cursor-pointer"
+									>
+									<input
+										type="text"
+										id="letterColorText"
+										value="#374151"
+										placeholder="#374151"
+										class="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50"
+									>
+								</div>
+							</div>
+
+							<!-- Letter Background Color -->
+							<div class="space-y-2">
+								<label for="letterBgColor" class="block text-sm font-medium text-gray-700">
+									Letter Background
+								</label>
+								<div class="flex gap-2 items-center">
+									<input
+										type="color"
+										id="letterBgColor"
+										value="#ffffff"
+										class="w-12 h-10 border border-gray-200 rounded-lg cursor-pointer"
+									>
+									<input
+										type="text"
+										id="letterBgColorText"
+										value="#ffffff"
+										placeholder="#ffffff or transparent"
+										class="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50"
+									>
+								</div>
+							</div>
+
+							<!-- Puzzle Background Color -->
+							<div class="space-y-2">
+								<label for="puzzleBgColor" class="block text-sm font-medium text-gray-700">
+									Puzzle Background
+								</label>
+								<div class="flex gap-2 items-center">
+									<input
+										type="color"
+										id="puzzleBgColor"
+										value="#f9fafb"
+										class="w-12 h-10 border border-gray-200 rounded-lg cursor-pointer"
+									>
+									<input
+										type="text"
+										id="puzzleBgColorText"
+										value="#f9fafb"
+										placeholder="#f9fafb or transparent"
+										class="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50"
+									>
+								</div>
+							</div>
+						</div>
+
+						<!-- Grid Size -->
+						<div class="space-y-4">
+							<h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Grid Size</h4>
+							
+							<!-- Width -->
+							<div class="space-y-2">
+								<div class="flex items-center justify-between">
+									<label for="gridWidth" class="text-sm font-medium text-gray-700">
+										Width
+									</label>
+									<div class="flex items-center gap-2">
+										<span id="gridWidthValue" class="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">15</span>
+										<label class="flex items-center cursor-pointer">
+											<input
+												type="checkbox"
+												id="autoWidth"
+												class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1"
+											>
+											<span class="text-xs text-gray-500 font-medium">Auto</span>
+										</label>
+									</div>
+								</div>
+								<input
+									type="range"
+									id="gridWidth"
+									min="10"
+									max="30"
+									value="15"
+									class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
+								>
+							</div>
+
+							<!-- Height -->
+							<div class="space-y-2">
+								<div class="flex items-center justify-between">
+									<label for="gridHeight" class="text-sm font-medium text-gray-700">
+										Height
+									</label>
+									<div class="flex items-center gap-2">
+										<span id="gridHeightValue" class="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">15</span>
+										<label class="flex items-center cursor-pointer">
+											<input
+												type="checkbox"
+												id="autoHeight"
+												class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1"
+											>
+											<span class="text-xs text-gray-500 font-medium">Auto</span>
+										</label>
+									</div>
+								</div>
+								<input
+									type="range"
+									id="gridHeight"
+									min="10"
+									max="30"
+									value="15"
+									class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
+								>
+							</div>
+						</div>
+					</div>
+
+					<!-- Action Buttons -->
+					<div class="space-y-3">
+						<button
+							id="generateBtn"
+							class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+						>
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+							</svg>
+							Generate Puzzle
+						</button>
+						<button
+							id="exportBtn"
+							class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+							disabled
+						>
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+							</svg>
+							Export as Image
+						</button>
+					</div>
+					</div>
+				</div>
+
+				<!-- Puzzle Display -->
+				<div class="xl:col-span-3 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
+					<div id="puzzleContainer" class="flex flex-col items-center min-h-[600px]">
+						<div id="emptyState" class="flex flex-col items-center justify-center h-full text-center py-20">
+							<div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6">
+								<svg class="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+									<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								</svg>
+							</div>
+							<h3 class="text-2xl font-semibold text-gray-700 mb-2">Ready to Create</h3>
+							<p class="text-gray-500 max-w-md">Enter your words and click "Generate Puzzle" to create your custom word search.</p>
+						</div>
+						<div id="puzzleGrid" class="mb-8"></div>
+						<div id="wordList" class="w-full max-w-4xl"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<script>
+	class WordSearchGenerator {
+		private grid: string[][] = [];
+		private words: string[] = [];
+		private placedWords: string[] = [];
+		private gridWidth: number = 15;
+		private gridHeight: number = 15;
+		private allowBackwards: boolean = false;
+		private showBorders: boolean = false;
+		private showShadows: boolean = false;
+		private autoWidth: boolean = false;
+		private autoHeight: boolean = false;
+		private letterColor: string = '#374151';
+		private letterBgColor: string = '#ffffff';
+		private puzzleBgColor: string = '#f9fafb';
+		private debounceTimer: number | null = null;
+		
+		constructor() {
+			this.initializeEventListeners();
+		}
+
+		private debounce(func: Function, wait: number): (...args: any[]) => void {
+			return (...args: any[]) => {
+				if (this.debounceTimer) clearTimeout(this.debounceTimer);
+				this.debounceTimer = window.setTimeout(() => func.apply(this, args), wait);
+			};
+		}
+
+		private setupColorPickers(): void {
+			// Letter color
+			const letterColorPicker = document.getElementById('letterColor') as HTMLInputElement;
+			const letterColorText = document.getElementById('letterColorText') as HTMLInputElement;
+			
+			letterColorPicker?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.letterColor = target.value;
+				if (letterColorText) letterColorText.value = target.value;
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			letterColorText?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.letterColor = target.value;
+				if (letterColorPicker && this.isValidColor(target.value)) {
+					letterColorPicker.value = target.value;
+				}
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			// Letter background color
+			const letterBgColorPicker = document.getElementById('letterBgColor') as HTMLInputElement;
+			const letterBgColorText = document.getElementById('letterBgColorText') as HTMLInputElement;
+			
+			letterBgColorPicker?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.letterBgColor = target.value;
+				if (letterBgColorText) letterBgColorText.value = target.value;
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			letterBgColorText?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.letterBgColor = target.value;
+				if (letterBgColorPicker && this.isValidColor(target.value)) {
+					letterBgColorPicker.value = target.value;
+				}
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			// Puzzle background color
+			const puzzleBgColorPicker = document.getElementById('puzzleBgColor') as HTMLInputElement;
+			const puzzleBgColorText = document.getElementById('puzzleBgColorText') as HTMLInputElement;
+			
+			puzzleBgColorPicker?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.puzzleBgColor = target.value;
+				if (puzzleBgColorText) puzzleBgColorText.value = target.value;
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			puzzleBgColorText?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.puzzleBgColor = target.value;
+				if (puzzleBgColorPicker && this.isValidColor(target.value)) {
+					puzzleBgColorPicker.value = target.value;
+				}
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+		}
+
+		private isValidColor(color: string): boolean {
+			return /^#([0-9A-F]{3}){1,2}$/i.test(color);
+		}
+
+		initializeEventListeners(): void {
+			// Range input updates
+			const letterSizeSlider = document.getElementById('letterSize') as HTMLInputElement;
+			const letterSizeValue = document.getElementById('letterSizeValue');
+			letterSizeSlider?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				if (letterSizeValue) letterSizeValue.textContent = target.value + 'px';
+				// Real-time update
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			const letterSpacingSlider = document.getElementById('letterSpacing') as HTMLInputElement;
+			const letterSpacingValue = document.getElementById('letterSpacingValue');
+			letterSpacingSlider?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				if (letterSpacingValue) letterSpacingValue.textContent = target.value + 'px';
+				// Real-time update
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			const gridWidthSlider = document.getElementById('gridWidth') as HTMLInputElement;
+			const gridWidthValue = document.getElementById('gridWidthValue');
+			const autoWidthCheckbox = document.getElementById('autoWidth') as HTMLInputElement;
+			gridWidthSlider?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				const width = target.value;
+				if (gridWidthValue) gridWidthValue.textContent = width;
+				this.gridWidth = parseInt(width);
+			});
+
+			const gridHeightSlider = document.getElementById('gridHeight') as HTMLInputElement;
+			const gridHeightValue = document.getElementById('gridHeightValue');
+			const autoHeightCheckbox = document.getElementById('autoHeight') as HTMLInputElement;
+			gridHeightSlider?.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				const height = target.value;
+				if (gridHeightValue) gridHeightValue.textContent = height;
+				this.gridHeight = parseInt(height);
+			});
+
+			// Auto sizing checkboxes
+			autoWidthCheckbox?.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.autoWidth = target.checked;
+				if (gridWidthSlider) gridWidthSlider.disabled = target.checked;
+			});
+
+			autoHeightCheckbox?.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.autoHeight = target.checked;
+				if (gridHeightSlider) gridHeightSlider.disabled = target.checked;
+			});
+
+			// Generate button
+			document.getElementById('generateBtn')?.addEventListener('click', () => {
+				this.generatePuzzle();
+			});
+
+			// Export button
+			document.getElementById('exportBtn')?.addEventListener('click', () => {
+				this.exportAsImage();
+			});
+
+			// Allow backwards checkbox
+			document.getElementById('allowBackwards')?.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.allowBackwards = target.checked;
+			});
+
+			// Show borders checkbox
+			document.getElementById('showBorders')?.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.showBorders = target.checked;
+				// Re-render if puzzle exists
+				if (this.placedWords.length > 0) {
+					this.renderPuzzle();
+				}
+			});
+
+			// Show shadows checkbox
+			document.getElementById('showShadows')?.addEventListener('change', (e) => {
+				const target = e.target as HTMLInputElement;
+				this.showShadows = target.checked;
+				// Re-render if puzzle exists
+				if (this.placedWords.length > 0) {
+					this.renderPuzzle();
+				}
+			});
+
+			// Color picker event listeners
+			this.setupColorPickers();
+
+			// Add real-time formatting updates
+			document.getElementById('fontFamily')?.addEventListener('change', () => {
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			document.getElementById('fontWeight')?.addEventListener('change', () => {
+				if (this.placedWords.length > 0) this.renderPuzzle();
+			});
+
+			// Sample words button
+			document.getElementById('loadSampleBtn')?.addEventListener('click', () => {
+				const wordsInput = document.getElementById('words') as HTMLTextAreaElement;
+				if (wordsInput) {
+					wordsInput.value = 'PUZZLE\nSEARCH\nWORD\nGAME\nFUN\nCODE\nSTAR\nMOON\nSUN\nEARTH';
+				}
+			});
+
+			// Clear words button
+			document.getElementById('clearWordsBtn')?.addEventListener('click', () => {
+				const wordsInput = document.getElementById('words') as HTMLTextAreaElement;
+				if (wordsInput) {
+					wordsInput.value = '';
+				}
+			});
+		}
+
+		generatePuzzle(): void {
+			const wordsInput = document.getElementById('words') as HTMLTextAreaElement;
+			const generateBtn = document.getElementById('generateBtn') as HTMLButtonElement;
+			
+			if (!wordsInput) return;
+			
+			// Show loading state
+			if (generateBtn) {
+				generateBtn.disabled = true;
+				generateBtn.textContent = 'Generating...';
+			}
+			
+			// Use setTimeout to allow UI to update
+			setTimeout(() => {
+				try {
+					this.words = wordsInput.value.split('\n')
+						.map((word: string) => word.trim().toUpperCase())
+						.filter((word: string) => word.length > 0);
+
+					if (this.words.length === 0) {
+						alert('Please enter at least one word!');
+						return;
+					}
+
+					// Calculate optimal grid size if auto-sizing is enabled
+					this.calculateOptimalGridSize();
+
+					// Filter words that are too long for the grid
+					const maxLength = Math.max(this.gridWidth, this.gridHeight);
+					this.words = this.words.filter((word: string) => word.length <= maxLength);
+
+					if (this.words.length === 0) {
+						alert('All words are too long for the current grid size!');
+						return;
+					}
+
+					// Validate word count for grid size
+					const maxWords = Math.floor((this.gridWidth * this.gridHeight) / 4);
+					if (this.words.length > maxWords) {
+						alert(`Too many words for grid size ${this.gridWidth}x${this.gridHeight}. Maximum recommended: ${maxWords} words.`);
+						return;
+					}
+
+					this.createGrid();
+					this.placeWords();
+					this.fillEmptySpaces();
+					this.renderPuzzle();
+					
+					const exportBtn = document.getElementById('exportBtn') as HTMLButtonElement;
+					if (exportBtn) exportBtn.disabled = false;
+				} finally {
+					// Reset button state
+					if (generateBtn) {
+						generateBtn.disabled = false;
+						generateBtn.textContent = 'Generate Puzzle';
+					}
+				}
+			}, 10);
+		}
+
+		calculateOptimalGridSize(): void {
+			if (!this.autoWidth && !this.autoHeight) return;
+
+			const longestWord = Math.max(...this.words.map(word => word.length));
+			const totalLetters = this.words.reduce((sum, word) => sum + word.length, 0);
+			
+			// More aggressive sizing - start smaller and work up
+			const minArea = Math.max(totalLetters * 1.5, longestWord * longestWord * 0.8);
+			
+			if (this.autoWidth && this.autoHeight) {
+				// Both auto: find the smallest possible square that can fit all words
+				// Start with the theoretical minimum and test if words can fit
+				let testSize = Math.max(longestWord, Math.ceil(Math.sqrt(minArea)));
+				
+				// Try progressively smaller sizes first, then larger if needed
+				for (let size = testSize; size >= longestWord && size >= 5; size--) {
+					if (this.canFitAllWords(size, size)) {
+						this.gridWidth = size;
+						this.gridHeight = size;
+						break;
+					}
+				}
+				
+				// If no smaller size works, try larger sizes
+				if (this.gridWidth === 15 && this.gridHeight === 15) {
+					for (let size = testSize; size <= 30; size++) {
+						if (this.canFitAllWords(size, size)) {
+							this.gridWidth = size;
+							this.gridHeight = size;
+							break;
+						}
+					}
+				}
+			} else if (this.autoWidth) {
+				// Width auto, height fixed: find minimum width
+				for (let width = longestWord; width <= 30; width++) {
+					if (this.canFitAllWords(width, this.gridHeight)) {
+						this.gridWidth = width;
+						break;
+					}
+				}
+			} else if (this.autoHeight) {
+				// Height auto, width fixed: find minimum height
+				for (let height = longestWord; height <= 30; height++) {
+					if (this.canFitAllWords(this.gridWidth, height)) {
+						this.gridHeight = height;
+						break;
+					}
+				}
+			}
+
+			// Update UI to reflect calculated values
+			const gridWidthValue = document.getElementById('gridWidthValue');
+			const gridHeightValue = document.getElementById('gridHeightValue');
+			const gridWidthSlider = document.getElementById('gridWidth') as HTMLInputElement;
+			const gridHeightSlider = document.getElementById('gridHeight') as HTMLInputElement;
+
+			if (this.autoWidth && gridWidthValue && gridWidthSlider) {
+				gridWidthValue.textContent = this.gridWidth.toString();
+				gridWidthSlider.value = this.gridWidth.toString();
+			}
+			if (this.autoHeight && gridHeightValue && gridHeightSlider) {
+				gridHeightValue.textContent = this.gridHeight.toString();
+				gridHeightSlider.value = this.gridHeight.toString();
+			}
+		}
+
+		private canFitAllWords(width: number, height: number): boolean {
+			// Quick heuristic check - if the area is too small, definitely won't fit
+			const totalLetters = this.words.reduce((sum, word) => sum + word.length, 0);
+			const availableArea = width * height;
+			
+			// Need at least 60% of the grid to be available for words (rest for random letters)
+			if (totalLetters > availableArea * 0.6) {
+				return false;
+			}
+			
+			// Check if longest word can fit in any direction
+			const longestWord = Math.max(...this.words.map(word => word.length));
+			const canFitHorizontally = longestWord <= width;
+			const canFitVertically = longestWord <= height;
+			const canFitDiagonally = longestWord <= Math.sqrt(width * width + height * height);
+			
+			return canFitHorizontally || canFitVertically || canFitDiagonally;
+		}
+
+		createGrid(): void {
+			this.grid = Array(this.gridHeight).fill(null).map(() => 
+				Array(this.gridWidth).fill('')
+			);
+			this.placedWords = [];
+		}
+
+		placeWords(): void {
+			const directions: number[][] = [
+				[0, 1],   // horizontal
+				[1, 0],   // vertical
+				[1, 1],   // diagonal down-right
+				[1, -1],  // diagonal down-left
+			];
+
+			if (this.allowBackwards) {
+				directions.push(
+					[0, -1],  // horizontal backwards
+					[-1, 0],  // vertical backwards
+					[-1, -1], // diagonal up-left
+					[-1, 1]   // diagonal up-right
+				);
+			}
+
+			// Sort words by length (longest first) for better placement
+			const sortedWords = [...this.words].sort((a, b) => b.length - a.length);
+
+			for (const word of sortedWords) {
+				let placed = false;
+				let attempts = 0;
+				const maxAttempts = 100;
+
+				while (!placed && attempts < maxAttempts) {
+					const direction = directions[Math.floor(Math.random() * directions.length)];
+					const startRow = Math.floor(Math.random() * this.gridHeight);
+					const startCol = Math.floor(Math.random() * this.gridWidth);
+
+					if (this.canPlaceWord(word, startRow, startCol, direction)) {
+						this.placeWord(word, startRow, startCol, direction);
+						placed = true;
+					}
+					attempts++;
+				}
+
+				if (placed) {
+					this.placedWords.push(word);
+				}
+			}
+		}
+
+		canPlaceWord(word: string, row: number, col: number, direction: number[]): boolean {
+			const [dRow, dCol] = direction;
+			
+			for (let i = 0; i < word.length; i++) {
+				const newRow = row + i * dRow;
+				const newCol = col + i * dCol;
+
+				if (newRow < 0 || newRow >= this.gridHeight || 
+					newCol < 0 || newCol >= this.gridWidth) {
+					return false;
+				}
+
+				const currentCell = this.grid[newRow][newCol];
+				if (currentCell !== '' && currentCell !== word[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		placeWord(word: string, row: number, col: number, direction: number[]): void {
+			const [dRow, dCol] = direction;
+			
+			for (let i = 0; i < word.length; i++) {
+				const newRow = row + i * dRow;
+				const newCol = col + i * dCol;
+				this.grid[newRow][newCol] = word[i];
+			}
+		}
+
+		fillEmptySpaces(): void {
+			const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			
+			for (let row = 0; row < this.gridHeight; row++) {
+				for (let col = 0; col < this.gridWidth; col++) {
+					if (this.grid[row][col] === '') {
+						this.grid[row][col] = letters[Math.floor(Math.random() * letters.length)];
+					}
+				}
+			}
+		}
+
+		renderPuzzle(): void {
+			const puzzleGrid = document.getElementById('puzzleGrid');
+			const wordList = document.getElementById('wordList');
+			const emptyState = document.getElementById('emptyState');
+			const fontFamily = (document.getElementById('fontFamily') as HTMLSelectElement)?.value || 'Arial';
+			const fontWeight = (document.getElementById('fontWeight') as HTMLSelectElement)?.value || 'bold';
+			const letterSize = (document.getElementById('letterSize') as HTMLInputElement)?.value || '16';
+			const letterSpacing = (document.getElementById('letterSpacing') as HTMLInputElement)?.value || '0';
+
+			if (!puzzleGrid || !wordList) return;
+
+			// Hide empty state and show puzzle
+			if (emptyState) emptyState.style.display = 'none';
+
+			// Clear previous content
+			puzzleGrid.innerHTML = '';
+			wordList.innerHTML = '';
+
+			// Create grid
+			const gridElement = document.createElement('div');
+			gridElement.className = 'grid p-4 rounded-2xl shadow-inner';
+			gridElement.style.gridTemplateColumns = `repeat(${this.gridWidth}, 1fr)`;
+			// Use letter spacing to control gap between cells
+			gridElement.style.gap = letterSpacing + 'px';
+			// Apply puzzle background color
+			gridElement.style.backgroundColor = this.puzzleBgColor === 'transparent' ? 'transparent' : this.puzzleBgColor;
+
+			for (let row = 0; row < this.gridHeight; row++) {
+				for (let col = 0; col < this.gridWidth; col++) {
+					const cell = document.createElement('div');
+					const borderClass = this.showBorders ? 'border border-gray-300' : 'border-0';
+					const shadowClass = this.showShadows ? 'shadow-sm' : '';
+					cell.className = `w-8 h-8 flex items-center justify-center ${borderClass} rounded-lg ${shadowClass}`;
+					
+					// Apply font and color styles directly
+					cell.style.fontFamily = fontFamily;
+					cell.style.fontWeight = fontWeight;
+					cell.style.fontSize = letterSize + 'px';
+					cell.style.color = this.letterColor;
+					cell.style.backgroundColor = this.letterBgColor === 'transparent' ? 'transparent' : this.letterBgColor;
+					
+					cell.textContent = this.grid[row][col];
+					gridElement.appendChild(cell);
+				}
+			}
+
+			puzzleGrid.appendChild(gridElement);
+
+			// Create word list
+			if (this.placedWords.length > 0) {
+				const wordListTitle = document.createElement('h3');
+				wordListTitle.className = 'text-2xl font-bold text-gray-800 mb-6 text-center flex items-center justify-center gap-2';
+				wordListTitle.innerHTML = `
+					<svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+					</svg>
+					Find these words
+				`;
+				wordList.appendChild(wordListTitle);
+
+				const wordsGrid = document.createElement('div');
+				wordsGrid.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3';
+				
+				this.placedWords.forEach((word: string) => {
+					const wordElement = document.createElement('div');
+					wordElement.className = 'p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl text-center font-semibold text-gray-700 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 cursor-default shadow-sm';
+					wordElement.textContent = word;
+					wordsGrid.appendChild(wordElement);
+				});
+
+				wordList.appendChild(wordsGrid);
+			}
+		}
+
+		async exportAsImage(): Promise<void> {
+			const puzzleContainer = document.getElementById('puzzleContainer');
+			if (!puzzleContainer) return;
+			
+			try {
+				// Create a canvas to draw the puzzle
+				const canvas = document.createElement('canvas');
+				const ctx = canvas.getContext('2d');
+				if (!ctx) return;
+
+				// Set canvas size
+				const scale = 2;
+				canvas.width = 800 * scale;
+				canvas.height = 1000 * scale;
+				ctx.scale(scale, scale);
+
+				// Set background
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect(0, 0, 800, 1000);
+
+				// Get current settings
+				const fontFamily = (document.getElementById('fontFamily') as HTMLSelectElement)?.value || 'Arial';
+				const fontWeight = (document.getElementById('fontWeight') as HTMLSelectElement)?.value || 'bold';
+				const letterSize = parseInt((document.getElementById('letterSize') as HTMLInputElement)?.value || '16');
+
+				// Draw title
+				ctx.fillStyle = '#1f2937';
+				ctx.font = `bold 24px ${fontFamily}`;
+				ctx.textAlign = 'center';
+				ctx.fillText('Word Search Puzzle', 400, 40);
+
+				// Draw grid
+				const cellSize = 20;
+				const gridStartX = 400 - (this.gridWidth * cellSize) / 2;
+				const gridStartY = 80;
+
+				ctx.font = `${fontWeight} ${letterSize}px ${fontFamily}`;
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+
+				for (let row = 0; row < this.gridHeight; row++) {
+					for (let col = 0; col < this.gridWidth; col++) {
+						const x = gridStartX + col * cellSize;
+						const y = gridStartY + row * cellSize;
+
+						// Draw cell border only if showBorders is enabled
+						if (this.showBorders) {
+							ctx.strokeStyle = '#d1d5db';
+							ctx.strokeRect(x, y, cellSize, cellSize);
+						}
+
+						// Draw letter
+						ctx.fillStyle = '#1f2937';
+						ctx.fillText(
+							this.grid[row][col],
+							x + cellSize / 2,
+							y + cellSize / 2
+						);
+					}
+				}
+
+				// Draw word list
+				if (this.placedWords.length > 0) {
+					const wordListY = gridStartY + this.gridHeight * cellSize + 40;
+					ctx.font = `bold 18px ${fontFamily}`;
+					ctx.fillText('Find these words:', 400, wordListY);
+
+					ctx.font = `16px ${fontFamily}`;
+					const wordsPerRow = 3;
+					const wordSpacing = 250;
+
+					this.placedWords.forEach((word: string, index: number) => {
+						const row = Math.floor(index / wordsPerRow);
+						const col = index % wordsPerRow;
+						const x = 150 + col * wordSpacing;
+						const y = wordListY + 40 + row * 30;
+						ctx.fillText(word, x, y);
+					});
+				}
+
+				// Create download link
+				const link = document.createElement('a');
+				link.download = 'word-search-puzzle.png';
+				link.href = canvas.toDataURL('image/png');
+				link.click();
+			} catch (error) {
+				console.error('Export failed:', error);
+				alert('Export failed. Please try again.');
+			}
+		}
+	}
+
+	// Initialize the word search generator when the page loads
+	document.addEventListener('DOMContentLoaded', () => {
+		new WordSearchGenerator();
+	});
+</script>
