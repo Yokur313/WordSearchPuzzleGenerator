@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Word Search Generator">
-	<main class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+	<main class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-20">
 		<div class="max-w-7xl mx-auto p-4">
 			<header class="text-center mb-6">
 				<h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
@@ -12,7 +12,7 @@ import Layout from '../layouts/Layout.astro';
 				<p class="text-gray-600">Create beautiful, customizable word search puzzles</p>
 			</header>
 			
-			<div class="grid grid-cols-1 xl:grid-cols-4 gap-6 h-[calc(100vh-180px)]">
+			<div class="grid grid-cols-1 xl:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
 				<!-- Controls Panel -->
 				<div class="xl:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-y-auto">
 					<div class="p-4">
@@ -51,30 +51,6 @@ import Layout from '../layouts/Layout.astro';
 						</div>
 					</div>
 
-					<!-- Action Buttons -->
-					<div class="mb-4">
-						<div class="space-y-2">
-							<button
-								id="generateBtn"
-								class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm"
-							>
-								<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
-								</svg>
-								Generate Puzzle
-							</button>
-							<button
-								id="exportBtn"
-								class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-sm"
-								disabled
-							>
-								<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-								</svg>
-								Export as Image
-							</button>
-						</div>
-					</div>
 
 					<!-- Options -->
 					<div class="mb-4">
@@ -342,6 +318,33 @@ import Layout from '../layouts/Layout.astro';
 						<div id="puzzleGrid" class="mb-8"></div>
 						<div id="wordList" class="w-full max-w-4xl"></div>
 					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Fixed Action Buttons -->
+		<div class="fixed bottom-0 left-0 right-0 bg-white/98 backdrop-blur-md border-t border-gray-200/50 shadow-2xl z-50">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+				<div class="flex gap-3 justify-center max-w-lg mx-auto">
+					<button
+						id="generateBtn"
+						class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+					>
+						<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+						</svg>
+						Generate Puzzle
+					</button>
+					<button
+						id="exportBtn"
+						class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+						disabled
+					>
+						<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+						</svg>
+						Export as Image
+					</button>
 				</div>
 			</div>
 		</div>
