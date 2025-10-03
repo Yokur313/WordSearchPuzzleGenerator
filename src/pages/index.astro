@@ -5,18 +5,18 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Word Search Generator">
 	<main class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
 		<div class="max-w-7xl mx-auto p-4">
-			<header class="text-center mb-8">
-				<h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+			<header class="text-center mb-6">
+				<h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
 					Word Search Generator
 				</h1>
-				<p class="text-gray-600 text-lg">Create beautiful, customizable word search puzzles</p>
+				<p class="text-gray-600">Create beautiful, customizable word search puzzles</p>
 			</header>
 			
-			<div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+			<div class="grid grid-cols-1 xl:grid-cols-4 gap-6 h-[calc(100vh-180px)]">
 				<!-- Controls Panel -->
-				<div class="xl:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-					<div class="sticky top-6">
-						<h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+				<div class="xl:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-y-auto">
+					<div class="p-4">
+						<h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
 							<svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
 								<path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
 							</svg>
@@ -24,7 +24,7 @@ import Layout from '../layouts/Layout.astro';
 						</h2>
 					
 					<!-- Words Input -->
-					<div class="mb-6">
+					<div class="mb-4">
 						<label for="words" class="block text-sm font-medium text-gray-700 mb-2">
 							Words (one per line)
 						</label>
@@ -51,19 +51,45 @@ import Layout from '../layouts/Layout.astro';
 						</div>
 					</div>
 
+					<!-- Action Buttons -->
+					<div class="mb-4">
+						<div class="space-y-2">
+							<button
+								id="generateBtn"
+								class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm"
+							>
+								<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+								</svg>
+								Generate Puzzle
+							</button>
+							<button
+								id="exportBtn"
+								class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-sm"
+								disabled
+							>
+								<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+								</svg>
+								Export as Image
+							</button>
+						</div>
+					</div>
+
 					<!-- Options -->
-					<div class="mb-6">
-						<h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Options</h3>
-						<div class="space-y-3">
-							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+					<div class="mb-4">
+						<h3 class="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">Options</h3>
+						<div class="space-y-2">
+							<label class="flex items-center p-2 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
 								<input
 									type="checkbox"
 									id="allowBackwards"
+									checked
 									class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors duration-200"
 								>
 								<span class="ml-3 text-sm text-gray-700 font-medium">Allow backwards words</span>
 							</label>
-							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+							<label class="flex items-center p-2 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
 								<input
 									type="checkbox"
 									id="showBorders"
@@ -71,7 +97,7 @@ import Layout from '../layouts/Layout.astro';
 								>
 								<span class="ml-3 text-sm text-gray-700 font-medium">Show letter borders</span>
 							</label>
-							<label class="flex items-center p-3 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+							<label class="flex items-center p-2 rounded-lg hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
 								<input
 									type="checkbox"
 									id="showShadows"
@@ -83,8 +109,8 @@ import Layout from '../layouts/Layout.astro';
 					</div>
 
 					<!-- Formatting Options -->
-					<div class="space-y-5 mb-6">
-						<h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Formatting</h3>
+					<div class="space-y-4 mb-4">
+						<h3 class="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">Formatting</h3>
 						
 						<!-- Font Selector -->
 						<div class="space-y-2">
@@ -139,8 +165,8 @@ import Layout from '../layouts/Layout.astro';
 								type="range"
 								id="letterSize"
 								min="12"
-								max="32"
-								value="16"
+								max="64"
+								value="24"
 								class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
 							>
 						</div>
@@ -157,7 +183,7 @@ import Layout from '../layouts/Layout.astro';
 								type="range"
 								id="letterSpacing"
 								min="0"
-								max="10"
+								max="20"
 								value="0"
 								class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer transition-all duration-200"
 							>
@@ -176,14 +202,14 @@ import Layout from '../layouts/Layout.astro';
 									<input
 										type="color"
 										id="letterColor"
-										value="#374151"
+										value="#000000"
 										class="w-12 h-10 border border-gray-200 rounded-lg cursor-pointer"
 									>
 									<input
 										type="text"
 										id="letterColorText"
-										value="#374151"
-										placeholder="#374151"
+										value="#000000"
+										placeholder="#000000"
 										class="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50"
 									>
 								</div>
@@ -220,14 +246,14 @@ import Layout from '../layouts/Layout.astro';
 									<input
 										type="color"
 										id="puzzleBgColor"
-										value="#f9fafb"
+										value="#ffffff"
 										class="w-12 h-10 border border-gray-200 rounded-lg cursor-pointer"
 									>
 									<input
 										type="text"
 										id="puzzleBgColorText"
-										value="#f9fafb"
-										placeholder="#f9fafb or transparent"
+										value="#ffffff"
+										placeholder="#ffffff or transparent"
 										class="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50"
 									>
 								</div>
@@ -250,6 +276,7 @@ import Layout from '../layouts/Layout.astro';
 											<input
 												type="checkbox"
 												id="autoWidth"
+												checked
 												class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1"
 											>
 											<span class="text-xs text-gray-500 font-medium">Auto</span>
@@ -278,6 +305,7 @@ import Layout from '../layouts/Layout.astro';
 											<input
 												type="checkbox"
 												id="autoHeight"
+												checked
 												class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1"
 											>
 											<span class="text-xs text-gray-500 font-medium">Auto</span>
@@ -296,34 +324,12 @@ import Layout from '../layouts/Layout.astro';
 						</div>
 					</div>
 
-					<!-- Action Buttons -->
-					<div class="space-y-3">
-						<button
-							id="generateBtn"
-							class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-						>
-							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
-							</svg>
-							Generate Puzzle
-						</button>
-						<button
-							id="exportBtn"
-							class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-							disabled
-						>
-							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-							</svg>
-							Export as Image
-						</button>
-					</div>
 					</div>
 				</div>
 
 				<!-- Puzzle Display -->
-				<div class="xl:col-span-3 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-					<div id="puzzleContainer" class="flex flex-col items-center min-h-[600px]">
+				<div class="xl:col-span-3 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 overflow-y-auto">
+					<div id="puzzleContainer" class="flex flex-col items-center h-full">
 						<div id="emptyState" class="flex flex-col items-center justify-center h-full text-center py-20">
 							<div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-6">
 								<svg class="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -349,14 +355,14 @@ import Layout from '../layouts/Layout.astro';
 		private placedWords: string[] = [];
 		private gridWidth: number = 15;
 		private gridHeight: number = 15;
-		private allowBackwards: boolean = false;
+		private allowBackwards: boolean = true;
 		private showBorders: boolean = false;
 		private showShadows: boolean = false;
-		private autoWidth: boolean = false;
-		private autoHeight: boolean = false;
-		private letterColor: string = '#374151';
+		private autoWidth: boolean = true;
+		private autoHeight: boolean = true;
+		private letterColor: string = '#000000';
 		private letterBgColor: string = '#ffffff';
-		private puzzleBgColor: string = '#f9fafb';
+		private puzzleBgColor: string = '#ffffff';
 		private debounceTimer: number | null = null;
 		
 		constructor() {
@@ -812,7 +818,7 @@ import Layout from '../layouts/Layout.astro';
 
 			// Create grid
 			const gridElement = document.createElement('div');
-			gridElement.className = 'grid p-4 rounded-2xl shadow-inner';
+			gridElement.className = 'grid p-8 rounded-2xl shadow-inner';
 			gridElement.style.gridTemplateColumns = `repeat(${this.gridWidth}, 1fr)`;
 			// Use letter spacing to control gap between cells
 			gridElement.style.gap = letterSpacing + 'px';
@@ -876,31 +882,45 @@ import Layout from '../layouts/Layout.astro';
 				const ctx = canvas.getContext('2d');
 				if (!ctx) return;
 
-				// Set canvas size
-				const scale = 2;
-				canvas.width = 800 * scale;
-				canvas.height = 1000 * scale;
-				ctx.scale(scale, scale);
-
-				// Set background
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, 800, 1000);
-
 				// Get current settings
 				const fontFamily = (document.getElementById('fontFamily') as HTMLSelectElement)?.value || 'Arial';
-				const fontWeight = (document.getElementById('fontWeight') as HTMLSelectElement)?.value || 'bold';
+				const fontWeight = (document.getElementById('fontWeight') as HTMLSelectElement)?.value || 'normal';
 				const letterSize = parseInt((document.getElementById('letterSize') as HTMLInputElement)?.value || '16');
+				const letterSpacing = parseInt((document.getElementById('letterSpacing') as HTMLInputElement)?.value || '0');
+
+				// Calculate dynamic canvas size based on grid and settings
+				// Match the viewer exactly: w-8 h-8 (32px) cells with gap spacing
+				const cellSize = 32; // Fixed size matching w-8 h-8 in viewer
+				const gridWidth = this.gridWidth * cellSize + (this.gridWidth - 1) * letterSpacing;
+				const gridHeight = this.gridHeight * cellSize + (this.gridHeight - 1) * letterSpacing;
+				const padding = 40;
+				const titleHeight = 60;
+				const wordListHeight = this.placedWords.length > 0 ? Math.ceil(this.placedWords.length / 4) * 35 + 80 : 0;
+
+				const canvasWidth = Math.max(800, gridWidth + padding * 2);
+				const canvasHeight = titleHeight + gridHeight + wordListHeight + padding * 3;
+
+				// Set canvas size with high DPI
+				const scale = 2;
+				canvas.width = canvasWidth * scale;
+				canvas.height = canvasHeight * scale;
+				ctx.scale(scale, scale);
+
+				// Set background - use puzzle background color or white
+				const bgColor = this.puzzleBgColor === 'transparent' ? '#ffffff' : this.puzzleBgColor;
+				ctx.fillStyle = bgColor;
+				ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 				// Draw title
 				ctx.fillStyle = '#1f2937';
 				ctx.font = `bold 24px ${fontFamily}`;
 				ctx.textAlign = 'center';
-				ctx.fillText('Word Search Puzzle', 400, 40);
+				ctx.textBaseline = 'middle';
+				ctx.fillText('Word Search Puzzle', canvasWidth / 2, titleHeight / 2);
 
 				// Draw grid
-				const cellSize = 20;
-				const gridStartX = 400 - (this.gridWidth * cellSize) / 2;
-				const gridStartY = 80;
+				const gridStartX = (canvasWidth - gridWidth) / 2;
+				const gridStartY = titleHeight + padding;
 
 				ctx.font = `${fontWeight} ${letterSize}px ${fontFamily}`;
 				ctx.textAlign = 'center';
@@ -908,17 +928,24 @@ import Layout from '../layouts/Layout.astro';
 
 				for (let row = 0; row < this.gridHeight; row++) {
 					for (let col = 0; col < this.gridWidth; col++) {
-						const x = gridStartX + col * cellSize;
-						const y = gridStartY + row * cellSize;
+						const x = gridStartX + col * (cellSize + letterSpacing);
+						const y = gridStartY + row * (cellSize + letterSpacing);
 
-						// Draw cell border only if showBorders is enabled
+						// Draw cell background if not transparent
+						if (this.letterBgColor !== 'transparent') {
+							ctx.fillStyle = this.letterBgColor;
+							ctx.fillRect(x, y, cellSize, cellSize);
+						}
+
+						// Draw cell border if enabled
 						if (this.showBorders) {
 							ctx.strokeStyle = '#d1d5db';
+							ctx.lineWidth = 1;
 							ctx.strokeRect(x, y, cellSize, cellSize);
 						}
 
-						// Draw letter
-						ctx.fillStyle = '#1f2937';
+						// Draw letter with correct color
+						ctx.fillStyle = this.letterColor;
 						ctx.fillText(
 							this.grid[row][col],
 							x + cellSize / 2,
@@ -929,18 +956,24 @@ import Layout from '../layouts/Layout.astro';
 
 				// Draw word list
 				if (this.placedWords.length > 0) {
-					const wordListY = gridStartY + this.gridHeight * cellSize + 40;
+					const wordListY = gridStartY + gridHeight + padding;
+					
+					// Title for word list
+					ctx.fillStyle = '#1f2937';
 					ctx.font = `bold 18px ${fontFamily}`;
-					ctx.fillText('Find these words:', 400, wordListY);
+					ctx.textAlign = 'center';
+					ctx.fillText('Find these words:', canvasWidth / 2, wordListY);
 
+					// Words in a grid layout
 					ctx.font = `16px ${fontFamily}`;
-					const wordsPerRow = 3;
-					const wordSpacing = 250;
+					ctx.textAlign = 'center';
+					const wordsPerRow = 4;
+					const wordSpacing = canvasWidth / (wordsPerRow + 1);
 
 					this.placedWords.forEach((word: string, index: number) => {
 						const row = Math.floor(index / wordsPerRow);
 						const col = index % wordsPerRow;
-						const x = 150 + col * wordSpacing;
+						const x = wordSpacing * (col + 1);
 						const y = wordListY + 40 + row * 30;
 						ctx.fillText(word, x, y);
 					});
